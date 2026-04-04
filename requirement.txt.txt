@@ -1,0 +1,1 @@
+install pandas, numpy, streamlit, matplotlib, seaborn
