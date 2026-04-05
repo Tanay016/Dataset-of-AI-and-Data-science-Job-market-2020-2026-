@@ -225,7 +225,7 @@ with gph_tab:
         )
     elif pills == "🥧 Pie Chart":
         st.markdown("<h2 style='text-align: center;'>🥧 Distribution Analysis</h2>", unsafe_allow_html=True)
-        choice = st.selectbox("Select a content:", ["🌍 Country Distribution", "🎓 Education Level Distribution"])
+        choice = st.selectbox("Select a content:", ["🌍 Country Distribution", "🎓 Education Level Distribution", "🏢 Job Role Distribution"])
         if choice == "🌍 Country Distribution":
             st.markdown("<h3 style='text-align: center;'>🌍 Job Distribution by Country</h3>", unsafe_allow_html=True)
             country_counts = df['country'].value_counts().reset_index()
@@ -256,7 +256,7 @@ with gph_tab:
                 "</div>",
                 unsafe_allow_html=True,
             )
-        else:
+        elif choice == "🎓 Education Level Distribution":
             st.markdown("<h3 style='text-align: center;'>🎓 Job Distribution by Education Level</h3>", unsafe_allow_html=True)
             edu_counts = df['education_level'].value_counts().reset_index()
             edu_counts.columns = ['education_level', 'count']
@@ -283,6 +283,36 @@ with gph_tab:
                 "<div style='padding: 15px; border-radius: 12px; background: rgba(0, 213, 255, 0.08); border-left: 4px solid #00D5FF; margin-top: 20px;'>"
                 "<p style='color: #D7F6FF; margin: 0; font-size: 13px;'>"
                 "<strong>💡 Insight:</strong> Most roles favor Master's degree holders, showing the value of advanced education. However, strong candidates with Bachelor's degrees are also highly competitive.</p>"
+                "</div>",
+                unsafe_allow_html=True,
+            )
+        else:
+            st.markdown("<h3 style='text-align: center;'>🏢 Job Role Distribution</h3>", unsafe_allow_html=True)
+            role_counts = df['job_title'].value_counts().reset_index()
+            role_counts.columns = ['job_title', 'count']
+            
+            fig, ax = plt.subplots(figsize=(10, 8))
+            fig.patch.set_facecolor('#050B16')
+            ax.set_facecolor('#020409')
+            sns.set_style("darkgrid")
+            palette = sns.color_palette("Set2", len(role_counts))
+            colors = [f'#{int(r*255):02x}{int(g*255):02x}{int(b*255):02x}' for r, g, b in palette]
+            
+            wedges, texts, autotexts = ax.pie(role_counts['count'], labels=role_counts['job_title'], autopct='%1.1f%%',
+                                               colors=colors, 
+                                               startangle=90, 
+                                               textprops={'color': '#C6E3FF', 'fontsize': 10, 'fontweight': 'bold'})
+            
+            for autotext in autotexts:
+                autotext.set_color('#020409')
+                autotext.set_fontweight('bold')
+            plt.tight_layout()
+            st.pyplot(fig)
+            
+            st.markdown(
+                "<div style='padding: 15px; border-radius: 12px; background: rgba(0, 213, 255, 0.08); border-left: 4px solid #00D5FF; margin-top: 20px;'>"
+                "<p style='color: #D7F6FF; margin: 0; font-size: 13px;'>"
+                "<strong>💡 Insight:</strong> Data Scientist and Machine Learning Engineer roles dominate the market, indicating high demand for core AI and data expertise.</p>"
                 "</div>",
                 unsafe_allow_html=True,
             )
